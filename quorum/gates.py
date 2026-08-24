@@ -36,8 +36,13 @@ class Proposal:
 
 @dataclass
 class Limits:
-    max_total_premium_pct: float = 0.35   # totaal in premie, ooit, als fractie van startkapitaal
-    max_daily_premium_pct: float = 0.08   # nieuwe premie per dag
+    # 2026-08-24, na lezing van de officiele jurycriteria: P&L is EEN van VIJF assen
+    # (P&L, Technology, Creativity, Presentation, Social). Een agressief premiebudget koopt
+    # variantie op ~20% van de punten en riskeert de andere 80% - een desk die opblaast
+    # demonstreert niets. Vandaar 22% in plaats van de 35% waar we op uitkwamen toen we
+    # dachten dat het puur om P&L ging.
+    max_total_premium_pct: float = 0.22   # totaal in premie, ooit, als fractie van startkapitaal
+    max_daily_premium_pct: float = 0.07   # nieuwe premie per dag
     max_open_positions: int = 4
     allowed_underlyings: tuple = ("SPY", "QQQ", "IWM")
     flat_by: date = date(2026, 9, 4)      # alles plat vóór het slot

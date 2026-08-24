@@ -97,6 +97,31 @@ quorum/
 └── desk.py              Strategist → Risk Officer → Trader loop. May decide to do nothing.
 ```
 
+## Designed against the actual judging criteria
+
+The contest scores five axes, and P&L is one of them:
+
+| criterion | how Quorum answers it |
+|---|---|
+| **P&L Performance** | Turn-of-month prior (t=3.67, 27y) expressed as ATM convexity. Premium budget capped at 22% — enough for a real number, not enough to blow up. |
+| **Technology Implementation** | All three surfaces: Trading API for chains and orders, **CLI** for long-running/cron sessions, **MCP** for the agent tool layer. `broker.py` is one interface, three transports. |
+| **Creativity & Originality** | Four agents that are allowed to disagree, and a Risk Officer with a real veto. Risk gates live in code, not in a prompt. The desk may decide to do nothing. |
+| **Presentation & Execution** | The veto *is* the demo. Watching the Risk Officer stop the Strategist mid-week is more legible than an equity curve. |
+| **Social engagement** | The Analyst agent writes the daily post-mortem itself — building in public is a function of the system, not a marketing afterthought. |
+
+A design note that follows from this: we deliberately did **not** maximise P&L variance. An earlier
+draft sized the premium budget at 35–50% because that maximises `P(finish first)` in a
+winner-take-most tournament. But that optimises ~20% of the available points while risking the
+other 80% — an agent that blows up demonstrates nothing. The Risk Officer's caps are set so the
+desk survives to show its reasoning.
+
+## The tool surface is the safety argument
+
+`AlpacaBroker.mcp_tools()` exposes five tools to the agents. Note what is missing: **there is no
+`place_order`.** The only path to the market is `submit_proposal()`, which calls
+`gates.evaluate()` before anything reaches Alpaca. An agent that decides to "just place an order
+anyway" doesn't exist here, because the tool isn't there.
+
 ## Alpaca infrastructure
 
 Alpaca MCP Server v2 (FastMCP/OpenAPI) for agent-facing tools, Trading API for execution,
