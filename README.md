@@ -102,3 +102,32 @@ quorum/
 Alpaca MCP Server v2 (FastMCP/OpenAPI) for agent-facing tools, Trading API for execution,
 Level 3 multi-leg options on a paper account. Options are commission-free, which is what makes a
 defined-risk debit structure viable at this size.
+
+---
+
+## Build timeline (full transparency)
+
+lablab's rules require that the **core AI-powered functionality** is built during the event window.
+We're stating exactly what existed when, so a judge never has to guess.
+
+**Before the window (Aug 24) — non-AI scaffolding only:**
+- `market_calendar.py` — date arithmetic. No model, no inference.
+- `gates.py` — deterministic risk limits and worst-case computation. No model.
+- `desk.py` — the loop skeleton, with **placeholder** strategist/risk-officer functions that are
+  plain `if` statements, deliberately built so the desk is testable without an API key.
+- Backtest research on the turn-of-month effect and the option structures (Python, historical data).
+
+**During the window (Aug 28 – Sep 4) — the actual agents:**
+- LLM-backed Strategist: reasons over calendar + market state, writes its own thesis
+- LLM-backed Risk Officer: argues its veto in natural language on top of the hard gates
+- Alpaca MCP integration for live execution
+- Analyst agent and the public post-mortems
+- Live dashboard
+
+The placeholder functions in `desk.py` exist to prove the *plumbing* works. Every one of them gets
+replaced by an agent during the event — that's the whole point of the architecture: the LLM slots
+in above the gates, never underneath them.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
